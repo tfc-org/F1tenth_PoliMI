@@ -16,7 +16,8 @@ F1TENTH is a 1/10-scale autonomous racing platform: a modified RC car with onboa
 
 - **Compute:** NVIDIA Jetson Orin Nano Developer Kit
 - **LiDAR:** under evaluation (see [LiDAR comparison](docs/hardware/LiDAR_comparison_F1TENTH.md))
-- **Full parts list:** [Master BOM](hardware/bom/Master%20BOM.xlsx)
+- **Chassis:** Traxxas Ford Fiesta ST Rally VXL (74276-4); see [chassis sourcing](docs/hardware/Fiesta_ST_Rally_VXL_sourcing_F1TENTH.md)
+- **Full parts list:** [Master BOM](hardware/bom/master_bom.xlsx)
 
 ## Repository structure
 
