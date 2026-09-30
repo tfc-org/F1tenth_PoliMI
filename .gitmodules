@@ -1,0 +1,4 @@
+[submodule "ros2_ws/src/f1tenth_system"]
+	path = ros2_ws/src/f1tenth_system
+	url = https://github.com/tfc-org/f1tenth_system.git
+	branch = humble-polimi
