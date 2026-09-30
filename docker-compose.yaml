@@ -3,14 +3,16 @@
 # Usage (from repo root):
 #   cp .env.example .env && edit it   # once
 #   docker compose build arm          # arm = Apple Silicon, x86 = PC, jet = Orin Nano
-#   docker compose up -d arm          # also starts novnc
+#   docker compose up -d arm
 #   docker compose exec arm bash
 #   cb                                # colcon build + source (alias from docker/ros/bashrc_polimi)
 #   ros2 launch f1tenth_gym_ros gym_bridge_launch.py open_foxglove:=false   # sim (arm / x86)
 #   ros2 launch f1tenth_stack no_lidar_bringup_launch.py                  # drivers (car)
 #
-# GUI: Foxglove at ws://localhost:8765 (foxglove_bridge), or RViz in the browser
-# at http://localhost:8080 (noVNC).
+# GUI: Foxglove at ws://localhost:8765 (foxglove_bridge; needs host networking
+# enabled in Docker Desktop). For RViz or other Linux GUI apps, start the
+# optional noVNC display and open http://localhost:8080:
+#   docker compose --profile gui up -d novnc
 
 x-build: &build
   context: .
@@ -29,8 +31,6 @@ x-common: &common
   shm_size: "1gb"
   stdin_open: true
   tty: true
-  depends_on:
-    - novnc
   # Starts the zenoh router in the background, then keeps the container alive.
   command: >
     bash -c "source /opt/ros/humble/setup.bash &&
@@ -48,8 +48,9 @@ x-common: &common
     - TERM=xterm-256color
 
 services:
-  # Virtual display + browser viewer shared by all ROS services.
+  # Optional virtual display + browser viewer for RViz. Opt-in: --profile gui
   novnc:
+    profiles: [gui]
     build: ./docker/novnc
     image: f1tenth_polimi:novnc
     container_name: f1tenth_polimi_novnc
