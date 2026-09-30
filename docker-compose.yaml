@@ -9,10 +9,12 @@
 #   ros2 launch f1tenth_gym_ros gym_bridge_launch.py open_foxglove:=false   # sim (arm / x86)
 #   ros2 launch f1tenth_stack no_lidar_bringup_launch.py                  # drivers (car)
 #
-# GUI: Foxglove at ws://localhost:8765 (foxglove_bridge; needs host networking
-# enabled in Docker Desktop). For RViz or other Linux GUI apps, start the
-# optional noVNC display and open http://localhost:8080:
+# GUI: Foxglove at ws://localhost:8765 (foxglove_bridge). For RViz or other
+# Linux GUI apps, start the optional noVNC display and open http://localhost:8080:
 #   docker compose --profile gui up -d novnc
+#
+# Networking: arm / x86 publish ports (all ROS processes live in one container).
+# jet uses host networking (native on Linux: LiDAR Ethernet, laptop <-> car).
 
 x-build: &build
   context: .
@@ -25,7 +27,6 @@ x-user-args: &user-args
   GID: "${HOST_GID:?set HOST_GID in .env (id -g)}"
 
 x-common: &common
-  network_mode: host
   ipc: host
   privileged: true
   shm_size: "1gb"
@@ -74,6 +75,8 @@ services:
     image: f1tenth_polimi:humble_arm
     container_name: f1tenth_polimi_arm
     <<: *common
+    ports:
+      - "127.0.0.1:8765:8765"   # Foxglove
     # build artefacts in named volumes: fast on macOS, no symlink issues on external drives
     volumes:
       - ./ros2_ws/src:/home/${USER}/ws/src:rw
@@ -95,6 +98,8 @@ services:
     image: f1tenth_polimi:humble_x86
     container_name: f1tenth_polimi_x86
     <<: *common
+    ports:
+      - "127.0.0.1:8765:8765"   # Foxglove
     volumes:
       - ./ros2_ws/src:/home/${USER}/ws/src:rw
       - ./ros2_ws/config:/home/${USER}/ws/config:rw
@@ -116,6 +121,7 @@ services:
     image: f1tenth_polimi:humble_jet
     container_name: f1tenth_polimi_jet
     <<: *common
+    network_mode: host
     runtime: nvidia
     volumes:
       - ./ros2_ws/src:/home/${USER}/ws/src:rw
