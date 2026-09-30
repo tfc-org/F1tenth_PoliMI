@@ -1,0 +1,7 @@
+# Sourced from ~/.bashrc in the F1tenth_PoliMI containers.
+source /opt/ros/humble/setup.bash
+[ -f /opt/sim_ws/install/setup.bash ] && source /opt/sim_ws/install/setup.bash
+[ -f "$HOME/ws/install/setup.bash" ] && source "$HOME/ws/install/setup.bash"
+
+alias sauce='source /opt/ros/humble/setup.bash; [ -f /opt/sim_ws/install/setup.bash ] && source /opt/sim_ws/install/setup.bash; source ~/ws/install/setup.bash'
+alias cb='cd ~/ws && colcon build --symlink-install && sauce'

@@ -1,0 +1,5 @@
+# The dev image only needs its own Dockerfile bits and the package manifests.
+*
+!docker/ros/
+!ros2_ws/src/
+ros2_ws/src/**/.git

@@ -1,0 +1,139 @@
+# F1tenth_PoliMI dev containers.
+#
+# Usage (from repo root):
+#   cp .env.example .env && edit it   # once
+#   docker compose build arm          # arm = Apple Silicon, x86 = PC, jet = Orin Nano
+#   docker compose up -d arm          # also starts novnc
+#   docker compose exec arm bash
+#   cb                                # colcon build + source (alias from docker/ros/bashrc_polimi)
+#   ros2 launch f1tenth_gym_ros gym_bridge_launch.py open_foxglove:=false   # sim (arm / x86)
+#   ros2 launch f1tenth_stack no_lidar_bringup_launch.py                  # drivers (car)
+#
+# GUI: Foxglove at ws://localhost:8765 (foxglove_bridge), or RViz in the browser
+# at http://localhost:8080 (noVNC).
+
+x-build: &build
+  context: .
+  dockerfile: docker/ros/Dockerfile
+  pull: false
+
+x-user-args: &user-args
+  USER: "${USER:?USER must be set}"
+  UID: "${HOST_UID:?set HOST_UID in .env (id -u)}"
+  GID: "${HOST_GID:?set HOST_GID in .env (id -g)}"
+
+x-common: &common
+  network_mode: host
+  ipc: host
+  privileged: true
+  shm_size: "1gb"
+  stdin_open: true
+  tty: true
+  depends_on:
+    - novnc
+  # Starts the zenoh router in the background, then keeps the container alive.
+  command: >
+    bash -c "source /opt/ros/humble/setup.bash &&
+    (ros2 run rmw_zenoh_cpp rmw_zenohd > /tmp/zenohd.log 2>&1 &) ;
+    exec tail -f /dev/null"
+  environment:
+    # GUI goes to the novnc service (virtual display :1), viewed in the browser.
+    - DISPLAY=:1
+    - LIBGL_ALWAYS_SOFTWARE=1
+    - USER=${USER}
+    - ROS_LOCALHOST_ONLY=0
+    - ROS_DOMAIN_ID=${ROS_DOMAIN_ID:-48}
+    - RMW_IMPLEMENTATION=rmw_zenoh_cpp
+    - RCUTILS_COLORIZED_OUTPUT=1
+    - TERM=xterm-256color
+
+services:
+  # Virtual display + browser viewer shared by all ROS services.
+  novnc:
+    build: ./docker/novnc
+    image: f1tenth_polimi:novnc
+    container_name: f1tenth_polimi_novnc
+    restart: unless-stopped
+    environment:
+      - RESOLUTION=${NOVNC_RESOLUTION:-1920x1080x24}
+      - VNC_PASSWORD=${VNC_PASSWORD:-}
+    # 127.0.0.1 = only this computer. On the car set NOVNC_BIND=0.0.0.0 (and a VNC_PASSWORD).
+    ports:
+      - "${NOVNC_BIND:-127.0.0.1}:${NOVNC_PORT:-8080}:8080"
+    volumes:
+      - x11socket:/tmp/.X11-unix
+
+  # Apple Silicon Mac (development / simulation)
+  arm:
+    build:
+      <<: *build
+      args:
+        <<: *user-args
+        WITH_SIM: "1"
+    image: f1tenth_polimi:humble_arm
+    container_name: f1tenth_polimi_arm
+    <<: *common
+    # build artefacts in named volumes: fast on macOS, no symlink issues on external drives
+    volumes:
+      - ./ros2_ws/src:/home/${USER}/ws/src:rw
+      - ./ros2_ws/config:/home/${USER}/ws/config:rw
+      - ./ros2_ws/maps:/home/${USER}/ws/maps:rw
+      - /dev:/dev:rw
+      - x11socket:/tmp/.X11-unix
+      - build_arm:/home/${USER}/ws/build
+      - install_arm:/home/${USER}/ws/install
+      - log_arm:/home/${USER}/ws/log
+
+  # x86 Linux / Windows PC (development / simulation)
+  x86:
+    build:
+      <<: *build
+      args:
+        <<: *user-args
+        WITH_SIM: "1"
+    image: f1tenth_polimi:humble_x86
+    container_name: f1tenth_polimi_x86
+    <<: *common
+    volumes:
+      - ./ros2_ws/src:/home/${USER}/ws/src:rw
+      - ./ros2_ws/config:/home/${USER}/ws/config:rw
+      - ./ros2_ws/maps:/home/${USER}/ws/maps:rw
+      - /dev:/dev:rw
+      - x11socket:/tmp/.X11-unix
+      - build_x86:/home/${USER}/ws/build
+      - install_x86:/home/${USER}/ws/install
+      - log_x86:/home/${USER}/ws/log
+
+  # Jetson Orin Nano (JetPack 6 = Ubuntu 22.04) on the car. Plain ros:humble
+  # (arm64), no simulator. Nothing in the stack uses the GPU today.
+  jet:
+    build:
+      <<: *build
+      args:
+        <<: *user-args
+        WITH_SIM: "0"
+    image: f1tenth_polimi:humble_jet
+    container_name: f1tenth_polimi_jet
+    <<: *common
+    runtime: nvidia
+    volumes:
+      - ./ros2_ws/src:/home/${USER}/ws/src:rw
+      - ./ros2_ws/config:/home/${USER}/ws/config:rw
+      - ./ros2_ws/maps:/home/${USER}/ws/maps:rw
+      - /dev:/dev:rw
+      - x11socket:/tmp/.X11-unix
+      - build_jet:/home/${USER}/ws/build
+      - install_jet:/home/${USER}/ws/install
+      - log_jet:/home/${USER}/ws/log
+
+volumes:
+  x11socket:
+  build_arm:
+  install_arm:
+  log_arm:
+  build_x86:
+  install_x86:
+  log_x86:
+  build_jet:
+  install_jet:
+  log_jet:
