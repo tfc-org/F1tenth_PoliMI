@@ -64,3 +64,14 @@ venv/
 .vscode/
 .idea/
 *.swp
+
+# ---------- Secrets ----------
+.env
+.secrets
+
+# ---------- Local overrides ----------
+*.local.*
+
+# ---------- Working notes ----------
+# Anything named *.ignore (e.g. docs/notes.ignore/) stays local: discussion notes, not final docs
+*.ignore
