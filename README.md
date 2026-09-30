@@ -76,7 +76,7 @@ bash scripts/setup_git.sh
 ```bash
 cp .env.example .env              # once: set HOST_UID / HOST_GID (id -u / id -g)
 docker compose build arm          # arm = Apple Silicon, x86 = PC, jet = Orin Nano
-docker compose up -d arm          # also starts novnc
+docker compose up -d arm
 docker compose exec arm bash
 cb                                # colcon build + source
 ```
@@ -87,7 +87,7 @@ Simulator (arm / x86):
 ros2 launch f1tenth_gym_ros gym_bridge_launch.py open_foxglove:=false
 ```
 
-View it in [Foxglove](https://app.foxglove.dev) at `ws://localhost:8765`, or RViz in the browser at http://localhost:8080 (noVNC). Rebuild the image whenever a `package.xml` changes: rosdep runs at build time.
+View it in [Foxglove](https://app.foxglove.dev) at `ws://localhost:8765` (enable host networking in Docker Desktop: Settings → Resources → Network). For RViz or other Linux GUI apps, start the optional display with `docker compose --profile gui up -d novnc` and open http://localhost:8080. Rebuild the image whenever a `package.xml` changes: rosdep runs at build time.
 
 ## Working with the f1tenth_system submodule
 
