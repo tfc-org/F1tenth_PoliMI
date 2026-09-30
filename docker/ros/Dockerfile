@@ -39,14 +39,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         ros-humble-rviz2 \
     && rm -rf /var/lib/apt/lists/*
 
-# System deps of everything in ros2_ws/src.
-COPY ros2_ws/src /tmp/src
-RUN apt-get update \
-    && (rosdep init 2>/dev/null || true) && rosdep update --rosdistro humble \
-    && rosdep install --from-paths /tmp/src --ignore-src --rosdistro humble -y \
-        --skip-keys "${ROSDEP_SKIP}" \
-    && rm -rf /tmp/src /var/lib/apt/lists/*
-
 # Simulator: f1tenth_gym (Python) + f1tenth_gym_ros (ROS bridge) as an underlay.
 # pip quirks copied from upstream gym_ros: a fresh pip is needed for the gym's
 # build backend, and on aarch64 + Ubuntu 22.04 PyQt6 must stay at 6.7.1
@@ -67,9 +59,20 @@ RUN if [ "${WITH_SIM}" = "1" ]; then \
     fi
 
 # Non-root user matching the host's UID/GID, so files in bind mounts stay yours.
+# It also owns /opt/sim_ws: gym_bridge_launch.py writes a scaled map copy next to itself.
 RUN (getent group ${GID} || groupadd -g ${GID} ${USER}) \
     && useradd -m -s /bin/bash -u ${UID} -g ${GID} -G sudo,dialout,plugdev ${USER} \
-    && echo "${USER} ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/${USER}
+    && echo "${USER} ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/${USER} \
+    && if [ -d /opt/sim_ws ]; then chown -R ${UID}:${GID} /opt/sim_ws; fi
+
+# System deps of everything in ros2_ws/src. Kept last: any change under
+# ros2_ws/src re-runs this step, and nothing expensive should sit after it.
+COPY ros2_ws/src /tmp/src
+RUN apt-get update \
+    && (rosdep init 2>/dev/null || true) && rosdep update --rosdistro humble \
+    && rosdep install --from-paths /tmp/src --ignore-src --rosdistro humble -y \
+        --skip-keys "${ROSDEP_SKIP}" \
+    && rm -rf /tmp/src /var/lib/apt/lists/*
 
 COPY docker/ros/bashrc_polimi /etc/bashrc_polimi
 RUN echo "source /etc/bashrc_polimi" >> /home/${USER}/.bashrc
