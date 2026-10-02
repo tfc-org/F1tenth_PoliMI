@@ -10,7 +10,7 @@ docker compose exec arm bash
 sim                        # = our ros2_ws/config/sim/sim_sl450.yaml
 ```
 
-- `sim` is a shell function from `docker/ros/bashrc_polimi`. After pulling a change to it, rebuild the image (`docker compose build arm`, only the last layers rerun) and recreate the container (`docker compose up -d arm`).
+- `sim` is a shell function from `docker/ros/bashrc_polimi`, which is bind-mounted: after a change, just open a new shell. Containers created before the mount was added need `docker compose up -d arm` once.
 - `sim <name>` loads `ros2_ws/config/sim/<name>.yaml`. `sim sim.yaml` runs the upstream config shipped with f1tenth_gym_ros. Anything after the name goes to `ros2 launch`, e.g. `sim sim_sl450 num_agent:=2`.
 - Without the function: `ros2 launch f1tenth_gym_ros gym_bridge_launch.py open_foxglove:=false config:=$HOME/ws/config/sim/sim_sl450.yaml`.
 - Default map `levine`, car starts at (-12, 0).

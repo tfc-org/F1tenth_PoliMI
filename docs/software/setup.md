@@ -23,5 +23,6 @@ docker compose build arm          # arm = Apple Silicon, x86 = PC, jet = Orin Na
 
 ## Rebuild the image when
 
+- the `Dockerfile` changes;
 - a `package.xml` changes (rosdep runs at build time);
 - `GYM_REF` / `GYM_ROS_REF` is bumped. Bump on purpose, never follow the branch.
