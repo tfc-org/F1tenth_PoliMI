@@ -7,10 +7,27 @@ f1tenth_gym + f1tenth_gym_ros, in the `arm` / `x86` containers.
 ```bash
 docker compose up -d arm
 docker compose exec arm bash
-ros2 launch f1tenth_gym_ros gym_bridge_launch.py open_foxglove:=false
+sim                        # = our ros2_ws/config/sim/sim_sl450.yaml
 ```
 
+- `sim` is a shell function from `docker/ros/bashrc_polimi`. After pulling a change to it, rebuild the image (`docker compose build arm`, only the last layers rerun) and recreate the container (`docker compose up -d arm`).
+- `sim <name>` loads `ros2_ws/config/sim/<name>.yaml`. `sim sim.yaml` runs the upstream config shipped with f1tenth_gym_ros. Anything after the name goes to `ros2 launch`, e.g. `sim sim_sl450 num_agent:=2`.
+- Without the function: `ros2 launch f1tenth_gym_ros gym_bridge_launch.py open_foxglove:=false config:=$HOME/ws/config/sim/sim_sl450.yaml`.
 - Default map `levine`, car starts at (-12, 0).
+
+## Sim configs
+
+`ros2_ws/config/sim/` holds our copies of f1tenth_gym_ros's `config/sim.yaml`. The bridge reads the whole file, so each copy is complete. Re-copy them when `GYM_ROS_REF` in the Dockerfile is bumped.
+
+| Config | LiDAR | Notes |
+|---|---|---|
+| `sim_sl450.yaml` (default) | 1351 beams, ±135°, 0.2°, noise σ 2 cm | Mimics the Orbbec Pulsar SL450. Mount `[0.275, 0, 0]` is still the upstream default (TODO: measure). |
+| `sim.yaml` (upstream) | 819 beams, ±135°, ≈0.33°, noise σ 1 cm | SICK TIM571 defaults. |
+
+- Beam spacing in f1tenth_gym is `(angle_max - angle_min) / (num_beams - 1)`. The comment in upstream `sim.yaml` says `/ num_beams`, which is wrong.
+- The sim publishes `/scan` far faster than a real LiDAR (topic timer 4 ms in async mode), while the SL450 tops out at 40 Hz. Don't tune timing-sensitive logic on sim scan rate alone.
+- `open_foxglove` / `target` in our copies are ignored: the launch file reads those defaults from the package's own `sim.yaml`.
+- Controllers must take beam angles from each `LaserScan` message (`angle_min + i * angle_increment`), never from hard-coded indices, so the same code runs on both configs and on the car.
 - The car only moves when commanded (keyboard or `/drive`).
 - Stop: `Ctrl-C`.
 
