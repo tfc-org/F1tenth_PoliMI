@@ -1,0 +1,14 @@
+# How the controllers use the Orbbec Pulsar SL450 scan (sim_sl450 mimics it, so this
+# file serves both). The sensor's own geometry (angle_min, angle_increment, ranges)
+# comes from each LaserScan message; the mount (position, yaw, upside down) comes from
+# TF base_frame <- laser. Angles below are in the car frame: 0 = ahead, + = left.
+# Use floats (90.0, not 90).
+/**:
+  ros__parameters:
+    lidar:
+      fov_min_deg: -90.0          # usable window for decisions
+      fov_max_deg: 90.0
+      mask_deg: [0.0, 0.0]        # blocked sectors as pairs [lo1, hi1, lo2, hi2, ...]; lo >= hi = none
+      range_min: 0.05             # m, closer = self-hit / dust, treated as no return
+      range_max: 15.0             # m, farther is not trusted (SL450: 15 m at 10% reflectivity)
+      expected_increment_deg: 0.2 # warn if the driver runs at a different resolution

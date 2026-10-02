@@ -62,6 +62,7 @@ Then open Foxglove at `ws://localhost:8765`.
 | [Docker](docs/software/docker.md) | Services, networking, day-to-day commands, cleanup |
 | [Python and IDE](docs/software/python.md) | PyCharm interpreter in the container |
 | [Simulator](docs/software/simulator.md) | Run, sim configs, Foxglove, drive, reset, topics, RViz |
+| [Reactive control](docs/software/reactive.md) | Follow the Gap node (`polimi_reactive`): run, markers, tuning |
 | [Git and submodules](docs/software/git.md) | Editing and syncing the f1tenth_system fork |
 | [Car](docs/software/car.md) | Bringup and to-dos (car not here yet) |
 | [LiDAR comparison](docs/hardware/LiDAR_comparison_F1TENTH.md) | Candidate LiDARs and pick |
