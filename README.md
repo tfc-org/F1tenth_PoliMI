@@ -49,7 +49,7 @@ cp .env.example .env              # set HOST_UID / HOST_GID
 docker compose build arm          # x86 on a PC
 docker compose up -d arm
 docker compose exec arm bash
-ros2 launch f1tenth_gym_ros gym_bridge_launch.py open_foxglove:=false
+sim                               # simulator with ros2_ws/config/sim/sim_sl450.yaml
 ```
 
 Then open Foxglove at `ws://localhost:8765`.

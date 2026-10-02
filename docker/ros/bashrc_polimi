@@ -5,3 +5,17 @@ source /opt/ros/humble/setup.bash
 
 alias sauce='source /opt/ros/humble/setup.bash; [ -f /opt/sim_ws/install/setup.bash ] && source /opt/sim_ws/install/setup.bash; source ~/ws/install/setup.bash'
 alias cb='cd ~/ws && colcon build --symlink-install && sauce'
+
+# Simulator with one of our configs from ~/ws/config/sim (bind-mounted from ros2_ws/config/sim).
+#   sim                       -> sim_sl450.yaml (default)
+#   sim sim_sl450 num_agent:=2
+#   sim sim.yaml              -> upstream config shipped with f1tenth_gym_ros
+# Arguments after the config name go straight to ros2 launch.
+sim() {
+    local cfg="sim_sl450"
+    if [ $# -gt 0 ] && [[ "$1" != *":="* ]]; then cfg="$1"; shift; fi
+    local path="$HOME/ws/config/sim/${cfg%.yaml}.yaml"
+    [ -f "$path" ] || path="$cfg"   # not ours: let the launch file look in the package's config/
+    echo "sim config: $path"
+    ros2 launch f1tenth_gym_ros gym_bridge_launch.py open_foxglove:=false config:="$path" "$@"
+}
