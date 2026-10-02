@@ -6,8 +6,8 @@ f1tenth_gym + f1tenth_gym_ros, in the `arm` / `x86` containers.
 
 ```bash
 docker compose up -d arm
-docker compose exec arm bash
-sim                        # = our ros2_ws/config/sim/sim_sl450.yaml
+docker compose exec arm bash \
+  -c "source /opt/ros/humble/setup.bash && source /etc/bashrc_polimi && sim" # = our ros2_ws/config/sim/sim_sl450.yaml
 ```
 
 - `sim` is a shell function from `docker/ros/bashrc_polimi`, which is bind-mounted: after a change, just open a new shell. Containers created before the mount was added need `docker compose up -d arm` once.
@@ -44,7 +44,8 @@ sim                        # = our ros2_ws/config/sim/sim_sl450.yaml
 
 Second container shell:
 ```bash
-ros2 run teleop_twist_keyboard teleop_twist_keyboard
+docker compose exec arm bash \
+  -c "source /opt/ros/humble/setup.bash && ros2 run teleop_twist_keyboard teleop_twist_keyboard"
 ```
 
 - Keys work only while that terminal has focus. No arrow keys (they send zeros).
@@ -57,11 +58,11 @@ ros2 run teleop_twist_keyboard teleop_twist_keyboard
 
 Press `k` first: a reset keeps the last speed. Then:
 
-- Foxglove 3D panel → publish tool → **Pose estimate** → click and drag; or
-- ```bash
-  ros2 topic pub --once /initialpose geometry_msgs/msg/PoseWithCovarianceStamped \
-    "{header: {frame_id: map}, pose: {pose: {position: {x: -12.0, y: 0.0}, orientation: {w: 1.0}}}}"
-  ```
+Foxglove 3D panel → publish tool → **Pose estimate** → click and drag; or
+```bash
+docker compose exec arm bash \
+  -c "source /opt/ros/humble/setup.bash && ros2 topic pub --once /initialpose geometry_msgs/msg/PoseWithCovarianceStamped '{header: {frame_id: map}, pose: {pose: {position: {x: -12.0, y: 0.0}, orientation: {w: 1.0}}}}'"
+```
 
 After a crash the car stays stuck until reset.
 
