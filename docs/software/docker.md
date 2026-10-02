@@ -10,7 +10,7 @@
 | `novnc` | Optional browser display for RViz (profile `gui`) | – | port `8080` |
 
 - One image per target, built from `docker/ros/Dockerfile` on `ros:humble`.
-- Bind mounts: `ros2_ws/src`, `ros2_ws/config`, `ros2_ws/maps`.
+- Bind mounts: `ros2_ws/src`, `ros2_ws/config`, `ros2_ws/maps`, and `docker/ros/bashrc_polimi` (read-only, over the copy baked into the image).
 - `build/`, `install/`, `log/` live in Docker volumes (`build_arm`, …), not in the repo.
 - Ports bind to `127.0.0.1` only.
 
@@ -46,8 +46,18 @@ sauce                                      # re-source ROS + workspace
 
 ## Rebuild
 
+| You change | You do |
+|---|---|
+| Code in `ros2_ws/src` | `cb` in the container |
+| `ros2_ws/config`, `ros2_ws/maps` | nothing |
+| `docker/ros/bashrc_polimi` | open a new shell (`docker compose exec arm bash`) |
+| `docker-compose.yaml` | `docker compose up -d arm` (recreates, no rebuild) |
+| a `package.xml` dependency, `Dockerfile`, `GYM_REF` / `GYM_ROS_REF` | rebuild (below) |
+
+A rebuild reuses the cache up to the first changed step. If it downloads everything again, the cache was pruned (`docker builder prune`, or Docker Desktop's automatic cleanup) or the image predates a Dockerfile change: one slow build, then it's fast again.
+
 ```bash
-docker compose build arm                   # after package.xml / GYM_REF changes
+docker compose build arm                   # after package.xml / Dockerfile / GYM_REF changes
 docker compose build --no-cache arm        # from scratch
 docker compose up -d --force-recreate arm  # use the new image
 ```
