@@ -56,7 +56,7 @@ bridge:
     scan_angle_max: 135.0 # 135°
 
     # map parameters
-    map_path: 'maps/levine'
+    map_path: 'maps/Spielberg'
     map_img_ext: '.png'
 
     # car parameters and scale
@@ -71,9 +71,9 @@ bridge:
     num_agent: 1
 
     # ego starting pose on map
-    sx: -12.0
+    sx: 0.0
     sy: 0.0
-    stheta: 0.0
+    stheta: 0.26
 
     # Poses for 3 opponents below; add sx4/sy4/stheta4 and so on to race more.
 
