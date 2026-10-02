@@ -1,0 +1,27 @@
+# Follow the Gap parameters. Live-tunable: ros2 param set /gap_follow ftg.v_max 1.0
+# Use floats for float parameters (3.0, not 3): ROS 2 rejects an int for a double.
+# Topics and base_frame come from the launch file arguments.
+gap_follow:
+  ros__parameters:
+    enabled: true
+    steer_tau: 0.05             # s, steering low-pass time constant; 0 = off
+    marker_rate: 10.0           # Hz, /ftg/markers; 0 = off
+    tf_timeout: 2.0             # s to wait for TF base_frame <- laser before assuming identity
+
+    ftg:
+      r_max: 3.0                # m, decision horizon (ranges capped here)
+      smooth_deg: 1.0           # moving-average window over the scan
+      bubble_radius: 0.25       # m, car half-width (0.155) + 0.10 margin
+      r_free: 1.2               # m, a beam is free above this (must be < r_max)
+      target_mode: farthest_smoothed   # farthest | center | farthest_smoothed
+      target_window_deg: 10.0   # window for farthest_smoothed
+      steering_mode: angle      # angle | pure_pursuit
+      wheelbase: 0.33           # m, pure_pursuit only
+      lookahead_min: 0.5        # m, pure_pursuit only
+      lookahead_max: 1.5        # m, pure_pursuit only
+      max_steer: 0.41           # rad
+      speed_angles_deg: [10.0, 20.0]   # |steering| thresholds
+      speeds: [1.5, 1.0, 0.5]   # m/s below each threshold, last = above all
+      v_max: 1.5                # m/s, hard cap
+      side_clearance: 0.2       # m, don't turn toward a side closer than this; 0 = off
+      side_window_deg: [60.0, 100.0]   # side sector checked, mirrored for the right
