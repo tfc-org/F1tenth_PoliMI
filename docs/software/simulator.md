@@ -14,6 +14,8 @@ docker compose exec arm bash \
 - `sim <name>` loads `ros2_ws/config/sim/<name>.yaml`. `sim sim.yaml` runs the upstream config shipped with f1tenth_gym_ros. Anything after the name goes to `ros2 launch`, e.g. `sim sim_sl450 num_agent:=2`.
 - Without the function: `ros2 launch f1tenth_gym_ros gym_bridge_launch.py open_foxglove:=false config:=$HOME/ws/config/sim/sim_sl450.yaml`.
 - Default map `levine`, car starts at (-12, 0).
+- The car only moves when commanded (keyboard or `/drive`).
+- Stop: `Ctrl-C`.
 
 ## Sim configs
 
@@ -28,8 +30,6 @@ docker compose exec arm bash \
 - The sim publishes `/scan` far faster than a real LiDAR (topic timer 4 ms in async mode), while the SL450 tops out at 40 Hz. Don't tune timing-sensitive logic on sim scan rate alone.
 - `open_foxglove` / `target` in our copies are ignored: the launch file reads those defaults from the package's own `sim.yaml`.
 - Controllers must take beam angles from each `LaserScan` message (`angle_min + i * angle_increment`), never from hard-coded indices, so the same code runs on both configs and on the car.
-- The car only moves when commanded (keyboard or `/drive`).
-- Stop: `Ctrl-C`.
 
 ## Foxglove
 

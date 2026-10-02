@@ -42,6 +42,7 @@ Inside the container:
 ```bash
 cb                                         # colcon build --symlink-install + source
 sauce                                      # re-source ROS + workspace
+sim                                        # simulator, see simulator.md (arm / x86)
 ```
 
 ## Rebuild

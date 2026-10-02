@@ -60,7 +60,7 @@ Then open Foxglove at `ws://localhost:8765`.
 |---|---|
 | [Setup](docs/software/setup.md) | Stack, clone, git config, `.env`, first build |
 | [Docker](docs/software/docker.md) | Services, networking, day-to-day commands, cleanup |
-| [Simulator](docs/software/simulator.md) | Run, Foxglove, drive, reset, topics, RViz |
+| [Simulator](docs/software/simulator.md) | Run, sim configs, Foxglove, drive, reset, topics, RViz |
 | [Git and submodules](docs/software/git.md) | Editing and syncing the f1tenth_system fork |
 | [Car](docs/software/car.md) | Bringup and to-dos (car not here yet) |
 | [LiDAR comparison](docs/hardware/LiDAR_comparison_F1TENTH.md) | Candidate LiDARs and pick |
