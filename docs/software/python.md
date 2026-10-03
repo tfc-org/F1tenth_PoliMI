@@ -1,22 +1,6 @@
 # Python and IDE
 
-Two Python environments, for two jobs:
-
-| Environment | Where | Use |
-|---|---|---|
-| `.venv` (uv) | host | Pure-Python code and tools. No `rclpy`: ROS has no host packages. |
-| `/opt/ros-python/bin/python` | container | Anything that imports ROS. IDE module resolution, run and debug. |
-
-## Host environment (`.venv`)
-
-```bash
-uv sync                           # create .venv from pyproject.toml + uv.lock
-uv add <package>                  # add a dependency (updates both files)
-uv run <command>                  # run inside .venv, no activation needed
-```
-
-- `pyproject.toml` and `uv.lock` are committed; `.venv/` is not.
-- Keep versions in line with the container (Python 3.10, see `docker compose exec arm pip list`).
+All Python runs in the container: `rclpy` and the ROS packages have no host install. There is no host virtual environment.
 
 ## Container interpreter (PyCharm Professional)
 
