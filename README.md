@@ -60,7 +60,7 @@ Then open Foxglove at `ws://localhost:8765`.
 |---|---|
 | [Setup](docs/software/setup.md) | Stack, clone, git config, `.env`, first build |
 | [Docker](docs/software/docker.md) | Services, networking, day-to-day commands, cleanup |
-| [Python and IDE](docs/software/python.md) | Host `.venv` (uv), PyCharm interpreter in the container |
+| [Python and IDE](docs/software/python.md) | PyCharm interpreter in the container |
 | [Simulator](docs/software/simulator.md) | Run, sim configs, Foxglove, drive, reset, topics, RViz |
 | [Git and submodules](docs/software/git.md) | Editing and syncing the f1tenth_system fork |
 | [Car](docs/software/car.md) | Bringup and to-dos (car not here yet) |
