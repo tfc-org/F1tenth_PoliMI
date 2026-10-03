@@ -84,6 +84,7 @@ services:
       - ./ros2_ws/config:/home/${USER}/ws/config:rw
       - ./ros2_ws/maps:/home/${USER}/ws/maps:rw
       - /dev:/dev:rw
+      - ./docker/ros/python3-ros:/opt/ros-python/bin/python:ro   # IDE interpreter with the ROS environment
       - x11socket:/tmp/.X11-unix
       - ./docker/ros/bashrc_polimi:/etc/bashrc_polimi:ro   # live: edit, then open a new shell
       - build_arm:/home/${USER}/ws/build
@@ -108,6 +109,7 @@ services:
       - ./ros2_ws/config:/home/${USER}/ws/config:rw
       - ./ros2_ws/maps:/home/${USER}/ws/maps:rw
       - /dev:/dev:rw
+      - ./docker/ros/python3-ros:/opt/ros-python/bin/python:ro   # IDE interpreter with the ROS environment
       - x11socket:/tmp/.X11-unix
       - ./docker/ros/bashrc_polimi:/etc/bashrc_polimi:ro   # live: edit, then open a new shell
       - build_x86:/home/${USER}/ws/build
@@ -132,6 +134,7 @@ services:
       - ./ros2_ws/config:/home/${USER}/ws/config:rw
       - ./ros2_ws/maps:/home/${USER}/ws/maps:rw
       - /dev:/dev:rw
+      - ./docker/ros/python3-ros:/opt/ros-python/bin/python:ro   # IDE interpreter with the ROS environment
       - x11socket:/tmp/.X11-unix
       - ./docker/ros/bashrc_polimi:/etc/bashrc_polimi:ro   # live: edit, then open a new shell
       - build_jet:/home/${USER}/ws/build

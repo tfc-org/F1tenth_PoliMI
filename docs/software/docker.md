@@ -10,7 +10,7 @@
 | `novnc` | Optional browser display for RViz (profile `gui`) | – | port `8080` |
 
 - One image per target, built from `docker/ros/Dockerfile` on `ros:humble`.
-- Bind mounts: `ros2_ws/src`, `ros2_ws/config`, `ros2_ws/maps`, and `docker/ros/bashrc_polimi` (read-only, over the copy baked into the image).
+- Bind mounts: `ros2_ws/src`, `ros2_ws/config`, `ros2_ws/maps`, `docker/ros/bashrc_polimi` (read-only, over the copy baked into the image), and `docker/ros/python3-ros` (read-only, see [Python and IDE](python.md)).
 - `build/`, `install/`, `log/` live in Docker volumes (`build_arm`, …), not in the repo.
 - Ports bind to `127.0.0.1` only.
 
@@ -52,6 +52,7 @@ sim                                        # simulator, see simulator.md (arm / 
 | Code in `ros2_ws/src` | `cb` in the container |
 | `ros2_ws/config`, `ros2_ws/maps` | nothing |
 | `docker/ros/bashrc_polimi` | open a new shell (`docker compose exec arm bash`) |
+| `docker/ros/python3-ros` (also after a branch switch that replaces it) | `docker compose restart arm` |
 | `docker-compose.yaml` | `docker compose up -d arm` (recreates, no rebuild) |
 | a `package.xml` dependency, `Dockerfile`, `GYM_REF` / `GYM_ROS_REF` | rebuild (below) |
 
