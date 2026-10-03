@@ -4,11 +4,16 @@ Package `ros2_ws/src/polimi_reactive`, node `gap_follow`: `/scan` → `/drive`. 
 
 ## Run (sim)
 
+Simulation
 ```bash
 docker compose exec arm bash \
   -c "source /opt/ros/humble/setup.bash && source /etc/bashrc_polimi && sim"          # terminal 1
-docker compose exec arm bash \
-  -c "source /opt/ros/humble/setup.bash && source /etc/bashrc_polimi && cb && ros2 launch polimi_reactive gap_follow.launch.py"   # terminal 2
+```
+
+Follow The Gap
+```bash
+docker compose exec arm bash
+cb && ros2 launch polimi_reactive gap_follow.launch.py   # terminal 2
 ```
 
 - `cb` is only needed the first time and after adding files: the build uses `--symlink-install`, so edits to the Python code and to `config/ftg.yaml` apply on the next launch.
