@@ -13,9 +13,10 @@ sauce() {
 cb() { (cd "$HOME/ws" && colcon build --symlink-install "$@") && sauce; }
 
 # Simulator as the car (polimi_sim): gym + LiDAR / actuation / odometry models + the car's mux.
-#   simcar                    -> map levine, laser sl450
+#   simcar                    -> map spielberg, laser sl450
 #   simcar spielberg debug_map_to_odom:=truth
 #   simcar spielberg lidar:=sl450
+#   simcar spielberg ideal:=true      -> no imperfections, to compare
 # The first argument is a map: a file name in ~/ws/config/maps. The rest goes straight to ros2 launch.
 simcar() {
     local map="spielberg"

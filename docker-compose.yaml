@@ -6,7 +6,7 @@
 #   docker compose up -d arm
 #   docker compose exec arm bash
 #   cb                                # colcon build + source (alias from docker/ros/bashrc_polimi)
-#   simcar                            # simulator as the car, map levine (arm / x86)
+#   simcar                            # simulator as the car, map spielberg (arm / x86)
 #   ros2 launch f1tenth_stack no_lidar_bringup_launch.py                  # drivers (car)
 #
 # GUI: Foxglove at ws://localhost:8765 (foxglove_bridge). For RViz or other
