@@ -42,7 +42,8 @@ Inside the container:
 ```bash
 cb [colcon args]                           # colcon build --symlink-install + source, e.g. cb --packages-select f1tenth_stack
 sauce                                      # re-source ROS + workspace
-sim                                        # simulator, see simulator.md (arm / x86)
+simcar [map] [launch args]                 # simulator as the car, see sim_car.md (arm / x86)
+sim                                        # raw gym, see simulator.md (arm / x86)
 ```
 
 `cb` and `sauce` are shell functions, so they also work from a non-interactive shell:
@@ -67,7 +68,7 @@ docker compose down -v && docker compose up -d arm   # or: recreate the volumes
 |---|---|
 | Code in `ros2_ws/src` | `cb` in the container |
 | `ros2_ws/config`, `ros2_ws/maps` | nothing |
-| `docker/ros/bashrc_polimi` | open a new shell (`docker compose exec arm bash`) |
+| `docker/ros/bashrc_polimi` | open a new shell (`docker compose exec arm bash`). After a branch switch that replaces it (`/etc/bashrc_polimi: No such file or directory`): `docker compose restart arm` |
 | `docker/ros/python3-ros` (also after a branch switch that replaces it) | `docker compose restart arm` |
 | `docker-compose.yaml` | `docker compose up -d arm` (recreates, no rebuild) |
 | a `package.xml` dependency, `Dockerfile`, `GYM_REF` / `GYM_ROS_REF` | rebuild (below) |
