@@ -12,7 +12,7 @@ docker compose exec arm bash -c "source /etc/bashrc_polimi && simcar"    # levin
 
 ```bash
 docker compose exec arm bash -c "source /etc/bashrc_polimi && simcar spielberg"
-docker compose exec arm bash -c "source /etc/bashrc_polimi && simcar levine debug_map_to_odom:=true"
+docker compose exec arm bash -c "source /etc/bashrc_polimi && simcar spielberg debug_map_to_odom:=truth"   # scan drawn on the map
 ```
 
 - `simcar [map] [launch args]`: `map` is a file name in `ros2_ws/config/sim/` (`levine`, `spielberg`). The rest goes to `ros2 launch polimi_sim sim_car.launch.py`.
@@ -73,7 +73,10 @@ Mirrors `vesc_to_odom`: `/odom` (frame `odom`, child `base_link`) and TF `odom �
 
 - Speed = true longitudinal speed × (1 + `speed_scale_error` 0.02) + noise `speed_noise_std` 0.02 m/s, zeroed below `speed_deadband` 0.05 m/s.
 - Yaw rate = `v · tan(δ) / wheelbase`, with δ the **commanded** steering. `wheelbase` 0.3302 (gym). **[MEASURE]**: the car's `vesc.yaml` has 0.25.
-- `debug_map_to_odom` (false): static `map → odom` at the true start pose, to overlay `/odom` and the truth. Keep it false whenever SLAM or a particle filter publishes `map → odom`.
+- The yaw rate reads high in corners (9% at 1.5 m/s, steering 0.25 rad): the gym's tyres slip, the formula assumes they don't. `vesc_to_odom` on the car has the same error.
+- `debug_map_to_odom` (`off`): publishes `map → odom`, which normally SLAM or a particle filter provides. Keep it `off` whenever one of them runs.
+  - `static`: fixed at the true start pose. `/odom` and everything drawn through it (`/scan`) drift away from the map.
+  - `truth`: follows the truth, like a perfect localizer. `base_link` sits on the true pose and `/scan` stays on the map. `/odom` still drifts.
 
 ### `teleop_bridge` (`teleop_bridge.yaml`)
 
@@ -118,8 +121,11 @@ docker compose exec arm bash \
 ## Truth vs estimate in Foxglove
 
 - Display frame `map`: `ego_racecar/base_link` is the truth.
-- `base_link` belongs to the `odom` tree, which nothing ties to `map` until SLAM or localization runs. Launch with `debug_map_to_odom:=true` to see it: it drifts slowly away from the truth.
-- `/scan` is in frame `laser`: it shows only when `laser` connects to the display frame (display frame `odom` or `base_link`, or `debug_map_to_odom:=true`).
+- `base_link` belongs to the `odom` tree, which nothing ties to `map` until SLAM or localization runs.
+- `/scan` is in frame `laser`: it shows only when `laser` connects to the display frame. Display frame `odom` or `base_link`, or a `debug_map_to_odom` mode.
+- `debug_map_to_odom:=truth`: scan on the map. Use it to look at the scan.
+- `debug_map_to_odom:=static`: the scan and `base_link` rotate away from the map as the odometry drifts, about 8° per 90° corner. Use it to look at the drift.
+- A wall hit makes the truth jump: the gym zeroes the car's heading on collision. `/odom` does not follow.
 
 ## Tests
 
@@ -135,4 +141,4 @@ docker compose exec arm bash -c "source /etc/bashrc_polimi && cd ~/ws/src/polimi
 - Grazing loss and mixed pixels are computed from neighbouring beams, not from the map geometry.
 - `lidar_model` needs the bridge on wall-clock time: `use_sim_time: False` in the gym config.
 - The gym's 3D car model and wheels stay on the `ego_racecar/*` frames.
-- Reset (`/initialpose`) moves the truth, not `/odom`: wheel odometry keeps integrating, as on the car.
+- Reset (`/initialpose`) moves the truth, not `/odom`: wheel odometry keeps integrating, as on the car. With `debug_map_to_odom:=static` the overlay is then off until the next launch.
