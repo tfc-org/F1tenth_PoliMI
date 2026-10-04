@@ -29,5 +29,5 @@ The VESC packages (`vesc_driver`, `vesc_ackermann`) build with the rest of the w
 
 ## Follow-ups
 
-- LiDAR mount: the bringup hard-codes `base_link → laser` as `0.27 0 0.11`. It should read `ros2_ws/config/car/laser_mount.yaml`, the file the simulator uses ([sim_car.md](sim_car.md)).
+- LiDAR mount: the bringup hard-codes `base_link → laser` as `0.27 0 0.11`. It should read `ros2_ws/config/car/laser_mount.yaml`, the file the simulator uses ([simulator.md](simulator.md)).
 - `vesc.yaml` has `wheelbase: .25`; the simulated odometry uses the gym's 0.3302. Measure the car and align both.

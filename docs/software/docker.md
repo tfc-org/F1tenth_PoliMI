@@ -42,8 +42,7 @@ Inside the container:
 ```bash
 cb [colcon args]                           # colcon build --symlink-install + source, e.g. cb --packages-select f1tenth_stack
 sauce                                      # re-source ROS + workspace
-simcar [map] [launch args]                 # simulator as the car, see sim_car.md (arm / x86)
-sim                                        # raw gym, see simulator.md (arm / x86)
+simcar [map] [launch args]                 # simulator as the car, see simulator.md (arm / x86)
 ```
 
 `cb` and `sauce` are shell functions, so they also work from a non-interactive shell:

@@ -1,4 +1,5 @@
-# lidar_model: Orbbec Pulsar SL450 on top of the gym's ray caster.
+# Orbbec Pulsar SL450. Parameters of polimi_sim's lidar_model; the gym's own LiDAR (collision
+# checks, /sim/scan_unused) takes fov, resolution and ranges from here too.
 # The effect parameters (second block) can be changed while running: ros2 param set /lidar_model noise_std 0.0
 /**:
   ros__parameters:

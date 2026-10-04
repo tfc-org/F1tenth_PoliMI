@@ -20,16 +20,18 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-# F1tenth_PoliMI: copy of f1tenth_gym_ros config/sim.yaml at the commit pinned in
-# docker/ros/Dockerfile (GYM_ROS_REF 0839576), in car mode for polimi_sim. Re-copy it when
-# GYM_ROS_REF is bumped. Launch: simcar spielberg (see docs/software/sim_car.md).
-# Differences from upstream:
+# F1tenth_PoliMI: f1tenth_gym_ros config/sim.yaml at the commit pinned in docker/ros/Dockerfile
+# (GYM_ROS_REF 0839576), reduced to what is common to every run. Re-copy it when GYM_ROS_REF
+# is bumped. polimi_sim's launch merges it with three independent files into the config the
+# gym actually gets (see docs/software/simulator.md):
+#   ros2_ws/config/maps/<map>.yaml       map_path, sx, sy, stheta
+#   ros2_ws/config/lidar/<lidar>.yaml    beam count, angles and ranges of the gym's own LiDAR
+#   ros2_ws/config/car/laser_mount.yaml  lidar_base_link_to_lidar_tf
+# So those keys are not in this file. Differences from upstream in what is left:
 #   ego_drive_topic  sim/drive: the stack's /drive goes through the car's mux and actuation_model.
 #   ego_scan_topic   sim/scan_unused: /scan comes from lidar_model. The gym's LiDAR stays on
 #                    because its wall collision check runs on that scan (off = no collisions).
-#   LiDAR block      SL450 geometry and the car's mount, no noise: a clean reference for /scan.
 #   kb_teleop        False: the gym's /cmd_vel path bypasses the mux. teleop_bridge takes /cmd_vel.
-#   map_path, sx, sy, stheta: the map this file is named after.
 
 bridge:
   ros__parameters:
@@ -45,24 +47,11 @@ bridge:
     opp_ego_odom_topic: 'opp_odom'
     opp_drive_topic: 'opp_drive'
 
-    # LiDAR related parameters
-    lidar_enabled: True
-    # Keep equal to ros2_ws/config/car/laser_mount.yaml (x, y, yaw)
-    lidar_base_link_to_lidar_tf: [0.27, 0.0, 0.0] # x, y, yaw from base_link to lidar
-    lidar_noise_std: 0.0 # lidar_model adds the noise. LiDAR accuracy - modelled as zero-mean Gaussian noise with this standard deviation (in meters)
-    
-    # laserscan parameters: Orbbec Pulsar SL450, 270° FOV at 0.2° (upstream default: SICK TIM571, 819 beams)
-    # f1tenth_gym computes resolution = (scan_angle_max - scan_angle_min) / (scan_num_beams - 1),
-    # so 270° / 0.2° + 1 = 1351 beams.
-    scan_num_beams: 1351
-    scan_range_min: 0.05 # 5cm
-    scan_range_max: 25.0 # 25m (SL450: 45 m at 70-90% reflectivity, 15 m at 10%; the gym ignores reflectivity)
-    # Angles have to be in degrees
-    scan_angle_min: -135.0 # -135°
-    scan_angle_max: 135.0 # 135°
+    # LiDAR: lidar_enabled, lidar_base_link_to_lidar_tf, lidar_noise_std, scan_num_beams,
+    # scan_range_min/max, scan_angle_min/max are filled in from the lidar and mount files.
 
     # map parameters
-    map_path: 'maps/Spielberg'
+    # map_path, sx, sy, stheta are filled in from the map file.
     map_img_ext: '.png'
 
     # car parameters and scale
@@ -75,11 +64,6 @@ bridge:
     # There is no upper limit, but every opponent needs an sx/sy/stheta below or the bridge
     # refuses to start.
     num_agent: 1
-
-    # ego starting pose on map
-    sx: 0.0
-    sy: 0.0
-    stheta: 0.26
 
     # Poses for 3 opponents below; add sx4/sy4/stheta4 and so on to race more.
 
@@ -134,7 +118,7 @@ foxglove:
   ros__parameters:
     # Automatically open Foxglove when the launch file starts.
     # Note: the launch file reads these two defaults from the package's own sim.yaml,
-    # not from config:=, so they have no effect here. `sim` passes open_foxglove:=false.
+    # not from config:=, so they have no effect here. simcar passes open_foxglove:=false.
     open_foxglove: True
     # Where to open Foxglove. Valid values: 'browser' or 'studio'.
     target: 'browser'
