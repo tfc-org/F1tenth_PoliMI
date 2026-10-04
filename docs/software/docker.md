@@ -1,6 +1,10 @@
 # Docker
 
+One image, built per machine type, holds ROS 2, the drivers' dependencies and (off the car) the simulator. The repo's code and configs are mounted into it, so you edit on the host and run in the container.
+
 ## Services
+
+Pick the service for your machine. `arm` is used in the examples; replace it with `x86` on a PC.
 
 | Service | Use | Simulator | Networking |
 |---|---|---|---|
@@ -11,7 +15,7 @@
 
 - One image per target, built from `docker/ros/Dockerfile` on `ros:humble`.
 - Bind mounts: `ros2_ws/src`, `ros2_ws/config`, `ros2_ws/maps`, `docker/ros/bashrc_polimi` (read-only, over the copy baked into the image), and `docker/ros/python3-ros` (read-only, see [Python and IDE](python.md)).
-- `build/`, `install/`, `log/` live in Docker volumes (`build_arm`, …), not in the repo.
+- `build/`, `install/`, `log/` live in Docker volumes (`build_arm`, …), not in the repo: build output stays out of git and is kept between container restarts.
 - Ports bind to `127.0.0.1` only.
 
 ## Docker Desktop from the command line (macOS)
@@ -26,6 +30,8 @@ docker desktop stop
 No Docker Desktop settings are needed for this repo.
 
 ## Everyday commands
+
+The container runs in the background; you open as many shells into it as you need.
 
 ```bash
 docker compose up -d arm                   # start
@@ -53,6 +59,8 @@ docker compose exec arm bash -c "source /etc/bashrc_polimi && cb"
 
 ### Volume ownership
 
+Only matters if `cb` fails with a permission error.
+
 - The image creates `~/ws/build`, `~/ws/install`, `~/ws/log` owned by the user; a **new** volume inherits that.
 - Volumes created by an older image stay root-owned and `cb` fails with `PermissionError … log/build_…`. Fix once, either way:
 
@@ -62,6 +70,8 @@ docker compose down -v && docker compose up -d arm   # or: recreate the volumes
 ```
 
 ## Rebuild
+
+What to do after a change, from cheapest to most expensive:
 
 | You change | You do |
 |---|---|
@@ -82,12 +92,16 @@ docker compose up -d --force-recreate arm  # use the new image
 
 ## Optional noVNC (RViz)
 
+Foxglove covers day-to-day visualization. For RViz, this side container serves a desktop in the browser.
+
 ```bash
 docker compose --profile gui up -d novnc   # then http://localhost:8080
 docker compose rm -sf novnc                # stop and remove
 ```
 
 ## Cleanup
+
+Docker images and build cache grow over time.
 
 ```bash
 docker compose down -v                     # also delete build/install/log volumes
