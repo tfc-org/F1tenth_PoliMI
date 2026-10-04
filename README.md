@@ -7,10 +7,10 @@ Politecnico di Milano's [F1TENTH](https://f1tenth.org/) autonomous racing stack,
 F1TENTH is a 1/10-scale autonomous racing platform: a modified RC car with onboard compute and sensors that must map a track, localize itself, and race around it at high speed with no human input. This repository holds everything for our car:
 
 - **Hardware:** parts selection, bill of materials, datasheets, CAD and wiring.
-- **Software:** a ROS 2 workspace (`ros2_ws/`) with the perception, localization (SLAM), planning and control stack.
+- **Software:** a ROS 2 workspace (`ros2_ws/`) with the perception, localization (SLAM), planning and control stack, and a simulator that behaves like the car so the stack can be written before the car exists.
 - **Documentation:** design decisions, component comparisons and notes.
 
-> 🚧 Work in progress: the project is in the hardware selection phase. More will be added as it develops.
+> 🚧 Work in progress: the hardware is still being selected and the car is not built. Meanwhile the software is developed against the simulator.
 
 ## Hardware
 
@@ -35,12 +35,14 @@ F1tenth_PoliMI/
 │   ├── src/
 │   │   ├── f1tenth_system/   # Submodule: drivers (our fork)
 │   │   └── polimi_*/         # Our packages
-│   ├── config/
-│   └── maps/
+│   ├── config/               # maps, lidar, car, sim: one file per thing, no rebuild
+│   └── maps/                 # Our own map images (none yet)
 └── scripts/              # setup_git.sh
 ```
 
 ## Quick start (simulator)
+
+Everything runs in Docker; nothing is installed on the host besides Docker itself.
 
 ```bash
 git clone --recurse-submodules https://github.com/tfc-org/F1tenth_PoliMI.git
@@ -50,12 +52,14 @@ docker compose build arm          # x86 on a PC
 docker compose up -d arm
 docker compose exec arm bash
 cb                                # build the workspace (first time)
-simcar                            # simulator as the car: map levine, laser sl450
+simcar                            # simulator as the car: map spielberg, laser sl450
 ```
 
-Then open Foxglove at `ws://localhost:8765`.
+Then open Foxglove at `ws://localhost:8765` to see the track, the car and the scan. The car stands still until it gets a command: [Simulator](docs/software/simulator.md) shows how to drive it.
 
 ## Documentation
+
+New here: read Setup, then Simulator. The others are references for when you need them.
 
 | Doc | Contents |
 |---|---|
