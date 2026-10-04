@@ -27,6 +27,7 @@ docker compose exec arm bash -c "source /etc/bashrc_polimi && simcar levine debu
 docker compose exec arm bash -c "source /etc/bashrc_polimi && simcar levine ideal:=true"                   # no imperfections, see Ideal mode
 ```
 
+- From the host, the same in one line each: `bash scripts/sim/start.real.sh`, `start.ideal.sh`, `start.teleop.sh`, `reset.sh`, `stop.sh` (see [scripts/sim](../../scripts/sim/README.md)).
 - `simcar [map] [launch args]` is a shell function from `docker/ros/bashrc_polimi`. `map` is a file name in `ros2_ws/config/maps/`. The rest goes to `ros2 launch polimi_sim sim_car.launch.py`.
 - The car only moves when commanded (teleop or `/drive`).
 - Stop: `Ctrl-C`.
@@ -219,6 +220,11 @@ The command above is the `levine` start. For `spielberg` use `position: {x: 0.0,
 
 After a crash the car stays stuck until reset.
 
+Both of these move only the true car. To also start `/odom` again from 0, use `bash scripts/sim/reset.sh` from the host, or add:
+```bash
+docker compose exec arm bash -c "source /etc/bashrc_polimi && ros2 service call /odom_model/reset std_srvs/srv/Empty"
+```
+
 ## Topics
 
 The first three are all the stack touches, on the simulator and on the car alike. The rest is for driving by hand, resetting, and evaluation.
@@ -273,7 +279,7 @@ Where the simulator still differs from the car, or simplifies:
 - Grazing loss and mixed pixels are computed from neighbouring beams, not from the map geometry.
 - `lidar_model` needs the bridge on wall-clock time: `use_sim_time: False` in `sim/gym.yaml`.
 - The gym's 3D car model and wheels stay on the `ego_racecar/*` frames.
-- Reset (`/initialpose`) moves the truth, not `/odom`: wheel odometry keeps integrating, as on the car. With `debug_map_to_odom:=static` the overlay is then off until the next launch; `truth` follows the reset.
+- `/initialpose` alone moves the truth, not `/odom`: wheel odometry keeps integrating, as on the car. `scripts/sim/reset.sh` also calls `/odom_model/reset`, which zeroes `/odom` and re-pins the `debug_map_to_odom:=static` overlay.
 
 ## Troubleshooting
 
