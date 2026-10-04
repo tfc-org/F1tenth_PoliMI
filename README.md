@@ -37,7 +37,7 @@ F1tenth_PoliMI/
 │   │   └── polimi_*/         # Our packages
 │   ├── config/               # maps, lidar, car, sim: one file per thing, no rebuild
 │   └── maps/                 # Our own map images (none yet)
-└── scripts/              # setup_git.sh
+└── scripts/              # setup_git.sh, sim/ (start, teleop, reset, stop the simulator)
 ```
 
 ## Quick start (simulator)
@@ -54,6 +54,8 @@ docker compose exec arm bash
 cb                                # build the workspace (first time)
 simcar                            # simulator as the car: map spielberg, laser sl450
 ```
+
+Once the image is built, `bash scripts/sim/start.real.sh` does the last four lines in one go.
 
 Then open Foxglove at `ws://localhost:8765` to see the track, the car and the scan. The car stands still until it gets a command: [Simulator](docs/software/simulator.md) shows how to drive it.
 
