@@ -25,3 +25,13 @@ sim() {
     echo "sim config: $path"
     ros2 launch f1tenth_gym_ros gym_bridge_launch.py open_foxglove:=false config:="$path" "$@"
 }
+
+# Simulator as the car (polimi_sim): gym + LiDAR / actuation / odometry models + the car's mux.
+#   simcar                    -> levine
+#   simcar spielberg debug_map_to_odom:=true
+# The first argument is a config name in ~/ws/config/sim; the rest goes straight to ros2 launch.
+simcar() {
+    local map="levine"
+    if [ $# -gt 0 ] && [[ "$1" != *":="* ]]; then map="$1"; shift; fi
+    ros2 launch polimi_sim sim_car.launch.py map:="$map" "$@"
+}

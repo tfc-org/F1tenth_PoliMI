@@ -2,6 +2,11 @@
 
 f1tenth_gym + f1tenth_gym_ros, in the `arm` / `x86` containers.
 
+Two modes:
+
+- **`simcar`** ([sim_car.md](sim_car.md)): the normal one. The gym plus `polimi_sim`, so the stack sees the car's topics, frames, rates and imperfections.
+- **`sim`** (this page): the raw gym. Ideal 250 Hz scan, no mux, `ego_racecar/*` frames. For checking the gym itself.
+
 ## Run
 
 ```bash
