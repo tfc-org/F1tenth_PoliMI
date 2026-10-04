@@ -50,7 +50,7 @@ docker compose build arm          # x86 on a PC
 docker compose up -d arm
 docker compose exec arm bash
 cb                                # build the workspace (first time)
-simcar                            # simulator as the car, ros2_ws/config/sim/levine.yaml
+simcar                            # simulator as the car: map levine, laser sl450
 ```
 
 Then open Foxglove at `ws://localhost:8765`.
@@ -62,8 +62,7 @@ Then open Foxglove at `ws://localhost:8765`.
 | [Setup](docs/software/setup.md) | Stack, clone, git config, `.env`, first build |
 | [Docker](docs/software/docker.md) | Services, networking, day-to-day commands, cleanup |
 | [Python and IDE](docs/software/python.md) | PyCharm interpreter in the container |
-| [Simulator as the car](docs/software/sim_car.md) | `simcar`: LiDAR / actuation / odometry models, mux, car frames, parameters |
-| [Simulator](docs/software/simulator.md) | Raw gym: run, sim configs, Foxglove, drive, reset, topics, RViz |
+| [Simulator](docs/software/simulator.md) | `simcar`: run, map / laser configs, model nodes and parameters, Foxglove, teleop, reset, topics |
 | [Git and submodules](docs/software/git.md) | Editing and syncing the f1tenth_system fork |
 | [Car](docs/software/car.md) | Bringup and to-dos (car not here yet) |
 | [LiDAR comparison](docs/hardware/LiDAR_comparison_F1TENTH.md) | Candidate LiDARs and pick |
