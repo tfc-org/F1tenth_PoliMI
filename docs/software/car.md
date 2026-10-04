@@ -11,6 +11,8 @@ docker compose exec jet bash
 ros2 launch f1tenth_stack no_lidar_bringup_launch.py
 ```
 
+The VESC packages (`vesc_driver`, `vesc_ackermann`) build with the rest of the workspace: `cb`.
+
 ## Before the first run
 
 - udev rule on the Jetson for `/dev/sensors/vesc` (expected by f1tenth's `vesc.yaml`).

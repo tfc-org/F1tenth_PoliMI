@@ -20,6 +20,7 @@ docker compose build arm          # arm = Apple Silicon, x86 = PC, jet = Orin Na
 
 - `setup_git.sh` fetches submodules and sets `push.recurseSubmodules=check`, `submodule.recurse=true` and an `upstream` remote in the fork. Safe to re-run.
 - First build takes a while (gym + gym_ros).
+- The image installs `ros-humble-asio-cmake-module` and `libasio-dev` by hand: `vesc_driver` needs them and rosdep doesn't resolve them.
 
 ## Rebuild the image when
 
