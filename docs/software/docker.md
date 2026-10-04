@@ -40,9 +40,25 @@ docker compose down                        # stop and remove containers
 Inside the container:
 
 ```bash
-cb                                         # colcon build --symlink-install + source
+cb [colcon args]                           # colcon build --symlink-install + source, e.g. cb --packages-select f1tenth_stack
 sauce                                      # re-source ROS + workspace
 sim                                        # simulator, see simulator.md (arm / x86)
+```
+
+`cb` and `sauce` are shell functions, so they also work from a non-interactive shell:
+
+```bash
+docker compose exec arm bash -c "source /etc/bashrc_polimi && cb"
+```
+
+### Volume ownership
+
+- The image creates `~/ws/build`, `~/ws/install`, `~/ws/log` owned by the user; a **new** volume inherits that.
+- Volumes created by an older image stay root-owned and `cb` fails with `PermissionError … log/build_…`. Fix once, either way:
+
+```bash
+docker compose exec -u root arm bash -c 'chown -R $USER: /home/$USER/ws/{build,install,log}'
+docker compose down -v && docker compose up -d arm   # or: recreate the volumes
 ```
 
 ## Rebuild

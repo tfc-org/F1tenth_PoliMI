@@ -3,8 +3,14 @@ source /opt/ros/humble/setup.bash
 [ -f /opt/sim_ws/install/setup.bash ] && source /opt/sim_ws/install/setup.bash
 [ -f "$HOME/ws/install/setup.bash" ] && source "$HOME/ws/install/setup.bash"
 
-alias sauce='source /opt/ros/humble/setup.bash; [ -f /opt/sim_ws/install/setup.bash ] && source /opt/sim_ws/install/setup.bash; source ~/ws/install/setup.bash'
-alias cb='cd ~/ws && colcon build --symlink-install && sauce'
+# Functions, not aliases: they also work in `docker compose exec arm bash -c "source /etc/bashrc_polimi && cb"`.
+sauce() {
+    source /opt/ros/humble/setup.bash
+    [ -f /opt/sim_ws/install/setup.bash ] && source /opt/sim_ws/install/setup.bash
+    [ -f "$HOME/ws/install/setup.bash" ] && source "$HOME/ws/install/setup.bash"
+}
+# Arguments go to colcon: cb --packages-select f1tenth_stack
+cb() { (cd "$HOME/ws" && colcon build --symlink-install "$@") && sauce; }
 
 # Simulator with one of our configs from ~/ws/config/sim (bind-mounted from ros2_ws/config/sim).
 #   sim                       -> sim_sl450.yaml (default)

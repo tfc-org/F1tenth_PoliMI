@@ -26,8 +26,10 @@ ENV PIP_BREAK_SYSTEM_PACKAGES=1
 RUN apt-get update && apt-get install -y --no-install-recommends \
         sudo git tmux nano less wget jq net-tools joystick \
         python3-pip python3-colcon-common-extensions python3-colcon-clean \
+        libasio-dev \
         ros-humble-rmw-zenoh-cpp \
         ros-humble-ackermann-msgs \
+        ros-humble-asio-cmake-module \
         ros-humble-tf-transformations \
         ros-humble-tf2-tools \
         ros-humble-xacro \
@@ -73,6 +75,11 @@ RUN apt-get update \
     && rosdep install --from-paths /tmp/src --ignore-src --rosdistro humble -y \
         --skip-keys "${ROSDEP_SKIP}" \
     && rm -rf /tmp/src /var/lib/apt/lists/*
+
+# build/install/log are named volumes: a new, empty volume takes the ownership
+# of the image directory it is mounted on, so these must exist and be the user's.
+RUN mkdir -p /home/${USER}/ws/build /home/${USER}/ws/install /home/${USER}/ws/log \
+    && chown -R ${UID}:${GID} /home/${USER}/ws
 
 COPY docker/ros/bashrc_polimi /etc/bashrc_polimi
 RUN echo "source /etc/bashrc_polimi" >> /home/${USER}/.bashrc
