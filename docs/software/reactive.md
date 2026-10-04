@@ -6,8 +6,7 @@ Package `ros2_ws/src/polimi_reactive`, node `gap_follow`: `/scan` → `/drive`. 
 
 Simulation
 ```bash
-docker compose exec arm bash \
-  -c "source /opt/ros/humble/setup.bash && source /etc/bashrc_polimi && sim"          # terminal 1
+docker compose exec arm bash -c "source /etc/bashrc_polimi && simcar"          # terminal 1
 ```
 
 Follow The Gap
@@ -17,15 +16,15 @@ cb && ros2 launch polimi_reactive gap_follow.launch.py   # terminal 2
 ```
 
 - `cb` is only needed the first time and after adding files: the build uses `--symlink-install`, so edits to the Python code and to `config/ftg.yaml` apply on the next launch.
-- Stop with `Ctrl-C`: the node sends a zero command on exit (the sim keeps applying the last `/drive` forever).
+- Stop with `Ctrl-C`: the node sends a zero command on exit; without it the mux drops `/drive` after 0.2 s anyway.
 - Pause without killing it: `ros2 param set /gap_follow enabled false` (sends one stop, then stays silent).
 - Reset after a crash: see [Simulator → Reset position](simulator.md#reset-position).
 
-Launch arguments: `lidar_config` (default `~/ws/config/lidar/sl450.yaml`), `params` (default the package's `config/ftg.yaml`), `base_frame` (default `ego_racecar/base_link`), `scan_topic`, `drive_topic`.
+Launch arguments: `params` (default the package's `config/ftg.yaml`, which also holds the `lidar.*` block), `base_frame` (default `base_link`), `scan_topic`, `drive_topic`.
 
 ## What to look at in Foxglove
 
-3D panel, display frame `ego_racecar/base_link` (or `map`), enable `/ftg/markers`:
+3D panel, display frame `base_link` (or `map` with `simcar spielberg debug_map_to_odom:=truth`), enable `/ftg/markers`:
 
 | Marker | Meaning |
 |---|---|
@@ -48,7 +47,7 @@ Code: `polimi_reactive/ftg.py` (plain numpy, unit-tested in `test/test_ftg.py`).
 6. **Steering** (`ftg.steering_mode`): `angle` (default) steers at the target's angle from the car; `pure_pursuit` uses `atan(2 L sin α / L_d)` with `L_d` clamped to `[lookahead_min, lookahead_max]`. Not toward a side closer than `ftg.side_clearance`. Clipped to `ftg.max_steer`, then low-passed with time constant `steer_tau`.
 7. **Speed** from `|steering|`: `speeds[k]` below `speed_angles_deg[k]`, the last entry above all, capped at `ftg.v_max`.
 
-Beam angles come from each `LaserScan` message, and the LiDAR mount comes from TF (`base_frame` ← scan frame): the sim publishes `ego_racecar/base_link → ego_racecar/laser`, the car's `f1tenth_stack` bringup publishes `base_link → laser`. All angles in the configs are in the car frame (0 = ahead, + = left), so the same code and configs work on 819 or 1351 beams, and with the LiDAR offset, rotated or upside down. If the TF is missing for `tf_timeout` s, the node warns and assumes the laser sits at `base_frame`.
+Beam angles come from each `LaserScan` message, and the LiDAR mount comes from TF (`base_frame` ← scan frame): `simcar` and the car's `f1tenth_stack` bringup both publish `base_link → laser`. All angles in the configs are in the car frame (0 = ahead, + = left), so the same code and configs work on 819 or 1351 beams, and with the LiDAR offset, rotated or upside down. If the TF is missing for `tf_timeout` s, the node warns and assumes the laser sits at `base_frame`.
 
 ## Tuning
 
@@ -74,15 +73,15 @@ Floats need a decimal point (`1.0`, not `1`): ROS 2 refuses an integer for a dou
 ## On the car
 
 ```bash
-ros2 launch polimi_reactive gap_follow.launch.py base_frame:=base_link
+ros2 launch polimi_reactive gap_follow.launch.py
 ```
 
 - `/drive` enters `ackermann_mux` at priority 10, under the joystick (100, LB held). Each input times out after 0.2 s, so killing the node stops the car.
-- Measure the real LiDAR mount and set it in the bringup's static transform (and in `sim_sl450.yaml`).
+- Measure the real LiDAR mount and set it in `ros2_ws/config/car/laser_mount.yaml` (and in the bringup's static transform).
 - Fill `lidar.mask_deg` with the sectors the chassis blocks once the SL450 is mounted.
 
 ## Not done yet
 
 - No AEB (time-to-collision braking): next step, as its own node.
 - Disparity extender: fixes corner clipping.
-- The sim's `/scan` runs at 250 Hz on a 100 Hz physics step; the SL450 gives 40 Hz. Re-check `steer_tau` on the car.
+- `steer_tau` is tuned on `simcar`'s 40 Hz `/scan`. Re-check it on the car.

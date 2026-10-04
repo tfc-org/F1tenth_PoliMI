@@ -1,7 +1,6 @@
 """Follow the Gap node.
 
-Sim:  ros2 launch polimi_reactive gap_follow.launch.py
-Car:  ros2 launch polimi_reactive gap_follow.launch.py base_frame:=base_link
+Sim (simcar) and car:  ros2 launch polimi_reactive gap_follow.launch.py
 """
 import os
 
@@ -16,14 +15,11 @@ def generate_launch_description():
     share = get_package_share_directory('polimi_reactive')
     args = [
         DeclareLaunchArgument(
-            'lidar_config', default_value=os.path.expanduser('~/ws/config/lidar/sl450.yaml'),
-            description='How the controller uses the scan (FOV window, masks, range limits).'),
-        DeclareLaunchArgument(
             'params', default_value=os.path.join(share, 'config', 'ftg.yaml'),
-            description='Follow the Gap parameters.'),
+            description='Follow the Gap parameters and how the controller uses the scan.'),
         DeclareLaunchArgument(
-            'base_frame', default_value='ego_racecar/base_link',
-            description='Car frame: ego_racecar/base_link in the sim, base_link on the car.'),
+            'base_frame', default_value='base_link',
+            description='Car frame: base_link on the car and in simcar.'),
         DeclareLaunchArgument('scan_topic', default_value='/scan'),
         DeclareLaunchArgument('drive_topic', default_value='/drive'),
     ]
@@ -34,7 +30,6 @@ def generate_launch_description():
         output='screen',
         emulate_tty=True,
         parameters=[
-            LaunchConfiguration('lidar_config'),
             LaunchConfiguration('params'),
             {
                 'base_frame': LaunchConfiguration('base_frame'),

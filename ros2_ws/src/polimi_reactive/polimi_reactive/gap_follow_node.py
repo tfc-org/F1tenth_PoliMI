@@ -57,7 +57,7 @@ class GapFollowNode(Node):
         self.declare_parameter('scan_topic', '/scan')
         self.declare_parameter('drive_topic', '/drive')
         self.declare_parameter('marker_topic', '/ftg/markers')
-        self.declare_parameter('base_frame', 'ego_racecar/base_link')
+        self.declare_parameter('base_frame', 'base_link')
         self.declare_parameter('enabled', True)
         self.declare_parameter('steer_tau', 0.05)       # s, steering low-pass; 0 disables
         self.declare_parameter('marker_rate', 10.0)     # Hz; 0 disables markers
@@ -252,8 +252,8 @@ class GapFollowNode(Node):
 
 
 def main(args=None):
-    # Handle Ctrl-C ourselves so the context is still valid to send a final stop:
-    # the sim keeps applying the last /drive command forever.
+    # Handle Ctrl-C ourselves so the context is still valid to send a final stop,
+    # without waiting for the mux timeout.
     rclpy.init(args=args, signal_handler_options=SignalHandlerOptions.NO)
     node = GapFollowNode()
     try:
