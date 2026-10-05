@@ -273,6 +273,7 @@ docker compose exec arm bash \
 
 Where the simulator still differs from the car, or simplifies:
 
+- No camera, and no room with a taped track: the maps are tracks bounded by walls, which the [scope](../scope.md) no longer has. The LiDAR sees those walls; in the room it will see only the room.
 - Truth pose: the gym's single-track state is at the centre of gravity, and the bridge publishes it as `ego_racecar/base_link`. `polimi_sim` treats it as `base_link` (rear axle on the car): a 0.17 m offset.
 - Vehicle body parameters are the gym's `f1tenth` preset.
 - The truth pose changes at 100 Hz (physics step). `lidar_model` interpolates between steps and extrapolates up to 30 ms past the newest one.

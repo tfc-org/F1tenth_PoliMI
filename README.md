@@ -12,7 +12,7 @@ F1TENTH is a 1/10-scale autonomous racing platform: a modified RC car with onboa
 
 Our course setup is not a standard F1TENTH track: the car races in a room on a track drawn with tape on the floor. See [Project scope](docs/scope.md).
 
-> 🚧 Work in progress: the project is in the hardware selection phase. More will be added as it develops.
+> 🚧 Work in progress: the hardware is still being selected and the car is not built. Meanwhile the software is developed against the simulator.
 
 ## Hardware
 
