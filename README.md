@@ -10,12 +10,15 @@ F1TENTH is a 1/10-scale autonomous racing platform: a modified RC car with onboa
 - **Software:** a ROS 2 workspace (`ros2_ws/`) with the perception, localization (SLAM), planning and control stack, and a simulator that behaves like the car so the stack can be written before the car exists.
 - **Documentation:** design decisions, component comparisons and notes.
 
-> 🚧 Work in progress: the hardware is still being selected and the car is not built. Meanwhile the software is developed against the simulator.
+Our course setup is not a standard F1TENTH track: the car races in a room on a track drawn with tape on the floor. See [Project scope](docs/scope.md).
+
+> 🚧 Work in progress: the project is in the hardware selection phase. More will be added as it develops.
 
 ## Hardware
 
 - **Compute:** NVIDIA Jetson Orin Nano Developer Kit
-- **LiDAR:** under evaluation (see [LiDAR comparison](docs/hardware/LiDAR_comparison_F1TENTH.md))
+- **LiDAR:** Orbbec Pulsar SL450 (see [LiDAR comparison](docs/hardware/LiDAR_comparison_F1TENTH.md))
+- **Camera:** required by the [scope](docs/scope.md); Intel RealSense D435i in the [Master BOM](hardware/bom/master_bom.xlsx)
 - **Chassis:** Traxxas Ford Fiesta ST Rally VXL (74276-4); see [chassis sourcing](docs/hardware/Fiesta_ST_Rally_VXL_sourcing_F1TENTH.md)
 - **Full parts list:** [Master BOM](hardware/bom/master_bom.xlsx)
 
@@ -24,6 +27,7 @@ F1TENTH is a 1/10-scale autonomous racing platform: a modified RC car with onboa
 ```
 F1tenth_PoliMI/
 ├── docs/
+│   ├── scope.md          # What the car must do, and where
 │   ├── hardware/         # Component comparisons and hardware decisions
 │   └── software/         # Setup, Docker, Python/IDE, simulator, git, car
 ├── hardware/             # BOM, datasheets, CAD, electronics
@@ -65,6 +69,7 @@ New here: read Setup, then Simulator. The others are references for when you nee
 
 | Doc | Contents |
 |---|---|
+| [Project scope](docs/scope.md) | Environment (room, taped track) and what the car must do |
 | [Setup](docs/software/setup.md) | Stack, clone, git config, `.env`, first build |
 | [Docker](docs/software/docker.md) | Services, networking, day-to-day commands, cleanup |
 | [Python and IDE](docs/software/python.md) | PyCharm interpreter in the container |
