@@ -2,6 +2,8 @@
 
 *Last updated: 23 September 2026*
 
+> **Scope change (5 Oct 2026):** the track is now tape on the floor of a room ([Project scope](../scope.md)). The LiDAR cannot see it and maps the room instead, so where this page says "track" about range or SLAM, read "room". The pick below is unchanged.
+
 ## Brief
 
 We need to pick a LiDAR for an F1TENTH car: a 1/10-scale self-driving car that runs SLAM and drives at high speed. The seven candidates below come from RobotShop EU. Specs were checked against each product page, and missing values (scan rates, drivers) were filled in from the manufacturers' datasheets.
