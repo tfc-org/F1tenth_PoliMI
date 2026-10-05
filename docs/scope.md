@@ -17,10 +17,6 @@ This replaces the earlier assumption of a track bounded by walls (flexible ducts
 1. **Map the room with SLAM.** The map is of the room, not of the track.
 2. **Detect the taped track and stay inside its lines** while driving.
 
-## Our addition
-
-3. **SLAM on the taped track with computer vision as the input**, not the LiDAR.
-
 ## What follows from the environment
 
 - **The LiDAR cannot see the track.** Tape is flat on the floor and the LiDAR scans a horizontal plane above it. The LiDAR sees the room only.
