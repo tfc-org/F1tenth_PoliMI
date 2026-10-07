@@ -23,7 +23,7 @@ Things the upstream bringup assumes or leaves to us:
 
 - udev rule on the Jetson for `/dev/sensors/vesc` (expected by f1tenth's `vesc.yaml`).
 - LiDAR driver for the chosen sensor (f1tenth_system only ships Hokuyo / SICK).
-- Camera driver (`realsense2_camera`) and the `base_link → camera_link` transform: the [scope](../scope.md) makes the camera required, and f1tenth_system has no camera.
+- Camera driver for the Gemini 335L (`orbbec_camera` from OrbbecSDK_ROS2, `gemini_330_series.launch.py`, plus Orbbec's udev rules) and the `base_link → camera_link` transform: the [scope](../scope.md) makes the camera required, and f1tenth_system has no camera.
 - Our configs: VESC gains and servo offset, joystick map, `base_link → laser` transform.
 - A real deadman for `/drive`: f1tenth's default `joy_teleop.yaml` doesn't gate autonomy.
 
