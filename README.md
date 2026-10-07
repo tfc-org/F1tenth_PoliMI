@@ -18,7 +18,7 @@ Our course setup is not a standard F1TENTH track: the car races in a room on a t
 
 - **Compute:** NVIDIA Jetson Orin Nano Developer Kit
 - **LiDAR:** Orbbec Pulsar SL450 (see [LiDAR comparison](docs/hardware/LiDAR_comparison_F1TENTH.md))
-- **Camera:** required by the [scope](docs/scope.md); Intel RealSense D435i in the [Master BOM](hardware/bom/master_bom.xlsx)
+- **Camera:** Orbbec Gemini 335L (see [camera comparison](docs/hardware/Camera_comparison_F1TENTH.md))
 - **Chassis:** Traxxas Ford Fiesta ST Rally VXL (74276-4); see [chassis sourcing](docs/hardware/Fiesta_ST_Rally_VXL_sourcing_F1TENTH.md)
 - **Full parts list:** [Master BOM](hardware/bom/master_bom.xlsx)
 
@@ -77,6 +77,7 @@ New here: read Setup, then Simulator. The others are references for when you nee
 | [Git and submodules](docs/software/git.md) | Editing and syncing the f1tenth_system fork |
 | [Car](docs/software/car.md) | Bringup and to-dos (car not here yet) |
 | [LiDAR comparison](docs/hardware/LiDAR_comparison_F1TENTH.md) | Candidate LiDARs and pick |
+| [Camera comparison](docs/hardware/Camera_comparison_F1TENTH.md) | Candidate cameras and pick |
 | [Chassis sourcing](docs/hardware/Fiesta_ST_Rally_VXL_sourcing_F1TENTH.md) | Fiesta ST Rally VXL and parts |
 
 ## License
