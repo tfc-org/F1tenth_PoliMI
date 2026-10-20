@@ -27,7 +27,7 @@ Our course setup is not a standard F1TENTH track: the car races in a room on a t
 ```
 F1tenth_PoliMI/
 ├── docs/
-│   ├── scope.md          # What the car must do, and where
+│   ├── scope.md          # What the car must do, where, and what we deliver
 │   ├── hardware/         # Component comparisons and hardware decisions
 │   └── software/         # Setup, Docker, Python/IDE, simulator, git, car
 ├── hardware/             # BOM, datasheets, CAD, electronics
@@ -69,7 +69,7 @@ New here: read Setup, then Simulator. The others are references for when you nee
 
 | Doc | Contents |
 |---|---|
-| [Project scope](docs/scope.md) | Environment (room, taped track) and what the car must do |
+| [Project scope](docs/scope.md) | Environment (room, taped track), what the car must do, summer school exercises and the 30L delivery |
 | [Setup](docs/software/setup.md) | Stack, clone, git config, `.env`, first build |
 | [Docker](docs/software/docker.md) | Services, networking, day-to-day commands, cleanup |
 | [Python and IDE](docs/software/python.md) | PyCharm interpreter in the container |
