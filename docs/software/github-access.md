@@ -1,6 +1,6 @@
 # GitHub access and branch rules
 
-*Snapshot of the `tfc-org` settings, read on 21 October 2026. GitHub is the source of truth: if this page and GitHub disagree, GitHub wins and this page needs an update.*
+*Snapshot of the `tfc-org` settings, read on 22 October 2026. GitHub is the source of truth: if this page and GitHub disagree, GitHub wins and this page needs an update.*
 
 This page says who can read, push, review and merge in our three repos, and how the rulesets protect the shared branches.
 
@@ -45,10 +45,12 @@ tfc-org
 
 Each ruleset is `active` and targets branches only. Tags are not protected.
 
+The branch patterns use GitHub's `fnmatch` syntax: `*` matches any characters except `/`, including none, so `dev-jazzy*` covers `dev-jazzy` and `dev-jazzy-polimi`, but not `fix/...` or `features/...` branches.
+
 | | `F1tenth_PoliMI` | `f1tenth_system` | `f1tenth_gym_ros` |
 |---|---|---|---|
 | Ruleset | `std-policies` | `std-protection` | `std-protection` |
-| Protected branches | `main` | `humble-polimi`, `jazzy-devel` | `dev-humble-polimi`, `dev-humble` |
+| Protected branches | `main` (default) | default, `humble-*`, `jazzy-*`: `humble-devel`, `humble-polimi`, `jazzy-devel`, `jazzy-polimi` | default, `dev-humble*`, `dev-jazzy*`: `dev-humble`, `dev-humble-polimi`, `dev-jazzy`, `dev-jazzy-polimi` |
 | Block deletion | yes | yes | yes |
 | Block force push | yes | yes | yes |
 | Restrict updates | no | yes, sync from upstream allowed | yes, sync from upstream allowed |
@@ -90,4 +92,4 @@ These differences are what the snapshot shows. They are not decisions recorded a
 - `F1tenth_PoliMI` requires a review from `F1tenth_Team`, while the forks require one from `F1tenth_PoliMI_Admins`.
 - `F1tenth_PoliMI` gives the bypass to a team, while the forks give it to the Admin repository role.
 - Only the forks restrict updates.
-- In `f1tenth_gym_ros`, the branches `main` and `dev-jazzy` are not protected.
+- In `f1tenth_gym_ros`, the branch `main` is not protected.
