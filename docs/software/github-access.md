@@ -55,7 +55,7 @@ Each ruleset is `active` and targets branches only. Tags are not protected.
 | Require a PR | yes | yes | yes |
 | Approvals needed | 1 | 1 | 1 |
 | Required reviewer team | `F1tenth_Team` (1 approval) | `F1tenth_PoliMI_Admins` (1 approval) | `F1tenth_PoliMI_Admins` (1 approval) |
-| New push dismisses approvals | yes | no | no |
+| New push dismisses approvals | yes | yes | yes |
 | Merge methods | merge, rebase | merge, squash, rebase | merge, squash, rebase |
 | Bypass | `F1tenth_PoliMI_Admins`, PR only | Repository role Admin, PR only | Repository role Admin, PR only |
 
@@ -89,17 +89,5 @@ These differences are what the snapshot shows. They are not decisions recorded a
 
 - `F1tenth_PoliMI` requires a review from `F1tenth_Team`, while the forks require one from `F1tenth_PoliMI_Admins`.
 - `F1tenth_PoliMI` gives the bypass to a team, while the forks give it to the Admin repository role.
-- Only the forks restrict updates, and only `F1tenth_PoliMI` dismisses approvals when a new commit is pushed.
+- Only the forks restrict updates.
 - In `f1tenth_gym_ros`, the branches `main` and `dev-jazzy` are not protected.
-
-## Reading the current settings
-
-All of these calls are read-only. Replace `<repo>` with a repo name and `<id>` with a ruleset id.
-
-```bash
-gh api orgs/tfc-org/teams --jq '.[] | "\(.slug) parent=\(.parent.slug // "-")"'
-gh api orgs/tfc-org/teams/<team>/members --jq '.[].login'
-gh api repos/tfc-org/<repo>/teams --jq '.[] | "\(.slug) \(.permission)"'
-gh api repos/tfc-org/<repo>/rulesets --jq '.[] | "\(.id) \(.name)"'
-gh api repos/tfc-org/<repo>/rulesets/<id> --jq '{conditions, bypass_actors, rules}'
-```
