@@ -1,6 +1,6 @@
 # Project scope
 
-*Last updated: 20 October 2026*
+*Last updated: 21 October 2026*
 
 This page says what the car has to do, in what environment, and what we deliver: the summer school exercises (esercitazioni) the professor will teach the students on our car and stack, and the 30L delivery, what our team has to deliver to get 30 e lode.
 
@@ -121,3 +121,20 @@ The stack must not depend on any of these:
 
 - **Floor:** material and colour. Ideally variable too.
 - **Tape:** colour and width.
+
+## Open items (OI)
+
+Decisions and checks the scope leaves open. Each row gives the options and a suggested answer; nothing is decided until the row says so. **[DECIDE]** is a choice for the team, **[VERIFY]** a fact to check.
+
+| ID | Type | Item | Options and suggestion | Needed by | Status |
+|---|---|---|---|---|---|
+| OI-01 | [DECIDE] | **Advanced topic: option A (racing line) or option B (hybrid localization).** | Both need the tape lines in map coordinates (OI-03). A also needs the vehicle parameters (friction, CoG height), the TUM optimizer, a controller that holds at speed, and a localization that keeps up at speed; it is easy to prove (lap times, line crossings), but the gain is small in a small room. B needs an EKF, a camera correction that observes only the lateral offset and heading relative to the tape, and handling of sensor failures; it is harder to prove on the car (needs a ground truth) and overlaps exercise 5. | After the base platform runs | **Held** until the base platform runs (21 Oct 2026) |
+| OI-02 | [DECIDE] | **Frame of the line-detection path:** car frame (`base_link`) or `odom`. | Suggested: `odom`, transformed at the image time stamp. It compensates the camera latency, keeps a fragment valid between frames, and lets the stale-path rule become "keep going on the last path for a short distance, then stop". Alternative: keep `base_link` and let the PID look up the transform at the image time. The path-following contract (any frame) does not change. | Line detection, path following | Open |
+| OI-03 | [DECIDE] | **Where the "path drawn in the map" comes from.** The tape is not in the LiDAR map, so the path cannot be drawn by hand inside it. | Suggested for the base platform: **teach and repeat**: drive the camera follower (1b) slowly with AMCL running, record the poses in the map, smooth them and save them as the path. Later, for A or B: **tape mapping**: project the detected tape into the map and build the two boundary lines. | Base platform done-when, exercise 1a | Open |
+| OI-04 | [DECIDE] | **Open paths.** Exercise 1a starts from a straight line, but offline paths are published as closed loops. | Add an open-path mode: the PID stops the car at the end of the path. | Path following | Open |
+| OI-05 | [DECIDE] | **Form of the PID.** A PID on the lateral error alone oscillates as speed rises. | Lateral and heading error with a look-ahead point (Stanley-like); Pure Pursuit as the drop-in for higher speed. | Path following | Open |
+| OI-06 | [DECIDE] | **Line detection method.** | (a) Image space: colour threshold, bird's-eye view, sliding windows, polynomial fit (the classic exercise 2). (b) Floor points: segment the tape, project the pixels onto the floor, fit and track the lines in `odom` (also feeds tape mapping, OI-03). (c) A learned segmentation, only if thresholds fail on the real floor. Hard cases for all: hairpins where three or four lines are visible, only one line visible, glare. First data: phone video of the real tape. | Exercise 2, base platform | Open |
+| OI-07 | [DECIDE] | **Localization node.** | `nav2_amcl` (named by the scope; needs an image rebuild), `slam_toolbox` in localization mode (already in the image), or MIT `particle_filter` if AMCL is too slow at speed. Risks: a rectangular room is symmetric (always give the initial pose), people standing around the track, furniture moved after mapping. | Exercise 3, base platform | Open |
+| OI-08 | [DECIDE] | **EKF for `odom`** (wheel odometry and the camera IMU, `robot_localization`) in the base platform. | Suggested: yes. It helps exercise 1a and both options, and is the first half of exercise 5. | Base platform | Open |
+| OI-09 | [VERIFY] | **Safety with `ackermann_mux` locks** (supported by the mux in `f1tenth_system`). | Emergency stop: a latched lock above the joystick. Autonomy deadman: a lock with a timeout between `/drive` and the joystick, released while RB is held (today RB's `autonomous_control` publishes to `/dev/null`, so the autonomy is not gated). AEB: an input between `/drive` and the joystick that brakes under a time-to-collision threshold, so a person can still drive the car away. Check how locks behave in this mux. | Safety | Open |
+| OI-10 | [VERIFY] | **One image rebuild** for `nav2_amcl`, `robot_localization`, `image_transport_plugins` and `cv_bridge`, together with the simulator fork's rebuild. | Check that `cv_bridge` does not install apt's `python3-opencv`, which clashes with the gym's pip `cv2`. | Before the stack nodes | Open |
