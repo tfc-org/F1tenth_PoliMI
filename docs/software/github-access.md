@@ -18,11 +18,11 @@ The org is on the **Free** plan. Org-level rulesets need GitHub Team, so each re
 
 ```
 tfc-org
-├── Owners:  TF-Costantini
-├── Members: AlbertoFurlan20 (in no team)
+├── Owners
+├── Members (some in no team)
 └── Teams
-    └── F1tenth_Team (f1tenth_team)                    maintainer: TF-Costantini
-        └── F1tenth_PoliMI_Admins (f1tenth_polimi_admins)  maintainer: TF-Costantini
+    └── F1tenth_Team (f1tenth_team)
+        └── F1tenth_PoliMI_Admins (f1tenth_polimi_admins)
 ```
 
 - **Parent and child team.** A child team inherits the parent team's repo access, and gets pinged when someone @mentions the parent. Anything given to the child stays with the child. `F1tenth_PoliMI_Admins` is the child, so its members get the team's write access plus anything given to the admins team, such as its bypass on `F1tenth_PoliMI`.
@@ -32,10 +32,10 @@ tfc-org
 
 | Who | How they get it | All three repos |
 |---|---|---|
-| Org owners (`TF-Costantini`) | Org owner | Admin |
+| Org owners | Org owner | Admin |
 | `F1tenth_Team` | Granted on each repo | Write |
 | `F1tenth_PoliMI_Admins` | Inherited from `F1tenth_Team` | Write |
-| Other org members (`AlbertoFurlan20`) | Org base permission: read | Read |
+| Org members in no team | Org base permission: read | Read |
 
 - **Read** lets a user clone, open issues, comment and review. Their approval does not count toward a required review, and they cannot push branches to the repo, so they work from a fork.
 - **Write** lets a user push branches and approve PRs. The rulesets below still block direct pushes to protected branches.
@@ -81,7 +81,7 @@ On `F1tenth_PoliMI` the repo setting also allows squash merges, but the ruleset 
 | Merge own PR without approval (bypass) | `F1tenth_PoliMI_Admins` members | repo admins |
 | Change the rulesets | repo admins, org owners | repo admins, org owners |
 
-Today `TF-Costantini` is the only member of either team, so every merge to a protected branch is a bypass merge.
+If a PR's author is the only member of the required reviewer team, nobody else can approve it, so the only way to merge it is a bypass merge.
 
 ## Differences between the repos
 
