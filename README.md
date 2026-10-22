@@ -75,6 +75,7 @@ New here: read Setup, then Simulator. The others are references for when you nee
 | [Python and IDE](docs/software/python.md) | PyCharm interpreter in the container |
 | [Simulator](docs/software/simulator.md) | `simcar`: run, map / laser configs, model nodes and parameters, Foxglove, teleop, reset, topics |
 | [Git and submodules](docs/software/git.md) | Editing and syncing the f1tenth_system fork |
+| [GitHub access](docs/software/github-access.md) | Teams, permissions, rulesets, who can review, merge and bypass |
 | [Car](docs/software/car.md) | Bringup and to-dos (car not here yet) |
 | [LiDAR comparison](docs/hardware/LiDAR_comparison_F1TENTH.md) | Candidate LiDARs and pick |
 | [Camera comparison](docs/hardware/Camera_comparison_F1TENTH.md) | Candidate cameras and pick |
