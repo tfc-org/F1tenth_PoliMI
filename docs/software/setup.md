@@ -16,8 +16,8 @@ The car's drivers come from the F1TENTH community, the simulator too; what we wr
 Clone with the submodules, tell the image who you are, and build it:
 
 ```bash
-git clone --recurse-submodules https://github.com/tfc-org/F1tenth_PoliMI.git
-cd F1tenth_PoliMI
+git clone --recurse-submodules https://github.com/tfc-org/f1tenth_polimi.git
+cd f1tenth_polimi
 bash scripts/setup_git.sh
 cp .env.example .env
 id -u; id -g                      # put these in .env as HOST_UID / HOST_GID
