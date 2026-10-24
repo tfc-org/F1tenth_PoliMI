@@ -25,7 +25,7 @@ Our course setup is not a standard F1TENTH track: the car races in a room on a t
 ## Repository structure
 
 ```
-F1tenth_PoliMI/
+f1tenth_polimi/
 ├── docs/
 │   ├── scope.md          # What the car must do, where, and what we deliver
 │   ├── hardware/         # Component comparisons and hardware decisions
@@ -49,8 +49,8 @@ F1tenth_PoliMI/
 Everything runs in Docker; nothing is installed on the host besides Docker itself.
 
 ```bash
-git clone --recurse-submodules https://github.com/tfc-org/F1tenth_PoliMI.git
-cd F1tenth_PoliMI && bash scripts/setup_git.sh
+git clone --recurse-submodules https://github.com/tfc-org/f1tenth_polimi.git
+cd f1tenth_polimi && bash scripts/setup_git.sh
 cp .env.example .env              # set HOST_UID / HOST_GID
 docker compose build arm          # x86 on a PC
 docker compose up -d arm

@@ -2,7 +2,7 @@
 
 The car's drivers live in a separate repository that we forked, linked here as a submodule. That keeps upstream's history intact and lets us pull their fixes, at the price of one extra commit whenever we change the fork.
 
-- `ros2_ws/src/f1tenth_system` is a submodule: our fork `tfc-org/f1tenth_system`, branch `humble-polimi`.
+- `ros2_ws/src/f1tenth_system` is a submodule: our fork `tfc-org/f1tenth_system_polimi`, branch `humble-polimi`.
 - Its own submodules: `vesc` (`ros2`), `ackermann_mux` (`foxy-devel`, builds on Humble), `teleop_tools` (`humble-devel`).
 - `setup_git.sh` adds `upstream` → `f1tenth/f1tenth_system`.
 
